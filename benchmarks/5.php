@@ -84,13 +84,13 @@ unset($foo);
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Component', 'Run 1', 'Run 2'],
-            ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkData()['symfony']['time'][0] ?>, <?= $bm->getBenchmarkData()['symfony']['time'][1] ?>],
-            ['Orno\\Di', <?= $bm->getBenchmarkData()['orno']['time'][0] ?>, <?= $bm->getBenchmarkData()['orno']['time'][1] ?>]
+            ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkData('benchmark5')['symfony']['time'][0] ?>, <?= $bm->getBenchmarkData('benchmark5')['symfony']['time'][1] ?>],
+            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark5')['orno']['time'][0] ?>, <?= $bm->getBenchmarkData('benchmark5')['orno']['time'][1] ?>]
         ]);
 
         var options = {
             hAxis: {title: 'Component', titleTextStyle: {color: 'red'}},
-            vAxis: {title: 'Time Taken', titleTextStyle: {color: 'red'}}
+            vAxis: {title: 'Time Taken (Seconds)', titleTextStyle: {color: 'red'}}
         };
 
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
