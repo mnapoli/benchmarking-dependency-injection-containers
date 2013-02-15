@@ -2,16 +2,21 @@
 
 class Timer
 {
-    public $start;
+    protected $benchmarks = [];
 
-    public function startBM()
+    public function start($benchmark, $component)
     {
-        unset($this->start);
-        $this->start = microtime(true);
+        $this->benchmarks[$benchmark][$component]['start'][] = microtime(true);
     }
 
-    public function endBM()
+    public function end($benchmark, $component)
     {
-        return number_format(microtime(true) - $start, 8);
+        $this->benchmarks[$benchmark][$component]['end'][] = microtime(true);
+        $this->benchmarks[$benchmark][$component]['time'][] = number_format($this->benchmarks[$benchmark][$component]['end'] - $this->benchmarks[$benchmark][$component]['start'], 6);
+    }
+
+    public function getBenchmarkData($benchmark)
+    {
+        return $this->benchmarks[$benchmark];
     }
 }

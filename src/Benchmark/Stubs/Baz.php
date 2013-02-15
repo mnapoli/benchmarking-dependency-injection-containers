@@ -7,7 +7,12 @@ class Baz implements BazInterface
 {
     public $bam;
 
-    public function __construct(Bam $bam)
+    public function __construct(Bam $bam = null)
+    {
+        $this->bam = $bam;
+    }
+
+    public function setBam(Bam $bam)
     {
         $this->bam = $bam;
     }

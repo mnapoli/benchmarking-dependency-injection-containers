@@ -3,11 +3,11 @@
     "license": "MIT",
     "require": {
         "php": ">=5.4",
-        "orno/loader": "dev-master",
         "orno/di": "dev-master",
         "pimple/pimple": "dev-trigger",
         "illuminate/container": "4.0.*@dev",
-        "zendframework/zend-di": "dev-master"
+        "zendframework/zend-di": "dev-master",
+        "symfony/dependency-injection": "2.2.*@dev"
     },
     "minimum-stability": "dev",
     "extra": {
