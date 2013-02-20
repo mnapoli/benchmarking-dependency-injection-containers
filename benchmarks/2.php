@@ -8,7 +8,7 @@ $bm = new Benchmark\Timer;
 
 /*******************************************************************************
  Benchmark 2: Auto resolution of object and dependencies.
- (Register all dependencies with container)
+ (Register all objects with container)
  Excluded: Pimple, Symfony
 ********************************************************************************/
 
@@ -53,3 +53,38 @@ unset($zend);
 unset($foo);
 
 ?>
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Benchmark 5</title>
+
+    <meta name="viewport" content="width-device-width, initial-scale=1">
+</head>
+<body>
+    <div id="chart_div" style="width: 800px; height: 500px;"></div>
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Component', 'Time Taken'],
+            ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkData('benchmark2')['laravel']['time'][0] ?>],
+            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark2')['orno']['time'][0] ?>],
+            ['Zend\\Di', <?= $bm->getBenchmarkData('benchmark2')['zend']['time'][0] ?>]
+        ]);
+
+        var options = {
+            hAxis: {title: 'Component', titleTextStyle: {color: 'red'}},
+            vAxis: {title: 'Time Taken (Seconds)', titleTextStyle: {color: 'red'}}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+    </script>
+</body>
+</html>
