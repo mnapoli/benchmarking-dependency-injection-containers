@@ -58,8 +58,8 @@ unset($foo);
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Component', 'Time Taken'],
-            ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkData('benchmark5')['symfony']['time'][0] ?> ?>],
-            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark5')['orno']['time'][0] ?> ?>]
+            ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkData('benchmark5')['symfony']['time'][0] ?>],
+            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark5')['orno']['time'][0] ?>]
         ]);
 
         var options = {
