@@ -4,6 +4,19 @@ echo PHP_EOL . PHP_EOL;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// To stop autoloader caching skewing results
+$bart = new Benchmark\Stubs\Bart;
+$bam = new Benchmark\Stubs\Bam($bart);
+$baz = new Benchmark\Stubs\Baz($bam);
+$bar = new Benchmark\Stubs\Bar($baz);
+$foo =  new Benchmark\Stubs\Foo($bar);
+
+unset($foo);
+unset($bar);
+unset($baz);
+unset($bam);
+unset($bart);
+
 $bm = new Benchmark\Timer;
 
 /*******************************************************************************
