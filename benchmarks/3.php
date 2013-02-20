@@ -11,6 +11,12 @@ $baz = new Benchmark\Stubs\Baz($bam);
 $bar = new Benchmark\Stubs\Bar($baz);
 $foo =  new Benchmark\Stubs\Foo($bar);
 
+unset($foo);
+unset($bar);
+unset($baz);
+unset($bam);
+unset($bart);
+
 $bm = new Benchmark\Timer;
 
 /*******************************************************************************
