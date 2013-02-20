@@ -38,3 +38,37 @@ unset($symfony);
 unset($foo);
 
 ?>
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Benchmark 4</title>
+
+    <meta name="viewport" content="width-device-width, initial-scale=1">
+</head>
+<body>
+    <div id="chart_div" style="width: 800px; height: 500px;"></div>
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Component', 'Time Taken'],
+            ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkData('benchmark4')['symfony']['time'][0] ?>],
+            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark4')['orno']['time'][0] ?>]
+        ]);
+
+        var options = {
+            hAxis: {title: 'Component', titleTextStyle: {color: 'red'}},
+            vAxis: {title: 'Time Taken (Seconds)', titleTextStyle: {color: 'red'}}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+    </script>
+</body>
+</html>
