@@ -17,7 +17,9 @@
     </ul>
     <h3>TODO</h3>
     <ul>
+        <li>Write up code and descriptions</li>
         <li>Add Zend\Di to BM 3, BM 4 &amp; BM 5</li>
     </ul>
+    <p>Open source at <a href="https://github.com/happyaccidents/benchmarking-dependency-injection-containers">https://github.com/happyaccidents/benchmarking-dependency-injection-containers</a>.</p>
 </body>
 </html>
