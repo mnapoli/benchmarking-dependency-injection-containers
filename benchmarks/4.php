@@ -50,6 +50,18 @@ $bm->end('benchmark4', 'symfony');
 unset($symfony);
 unset($foo);
 
+// Zend\Di
+$bm->start('benchmark4', 'zend');
+$zend = new Zend\Di\Di;
+$zend->instanceManager()->setInjections('Benchmark\Stubs\Foo', ['Benchmark\Stubs\Bar']);
+$zend->instanceManager()->setInjections('Benchmark\Stubs\Bar', ['Benchmark\Stubs\Baz']);
+$zend->instanceManager()->setInjections('Benchmark\Stubs\Baz', ['Benchmark\Stubs\Bam']);
+$zend->instanceManager()->setInjections('Benchmark\Stubs\Bam', ['Benchmark\Stubs\Bart']);
+$foo = $zend->get('Benchmark\Stubs\Foo');
+$bm->end('benchmark4', 'zend');
+unset($zend);
+unset($foo);
+
 ?>
 
 <!doctype html>
@@ -71,7 +83,8 @@ unset($foo);
         var data = google.visualization.arrayToDataTable([
             ['Component', 'Time Taken'],
             ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkData('benchmark4')['symfony']['time'][0] ?>],
-            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark4')['orno']['time'][0] ?>]
+            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark4')['orno']['time'][0] ?>],
+            ['Zend\\Di', <?= $bm->getBenchmarkData('benchmark4')['zend']['time'][0] ?>]
         ]);
 
         var options = {
