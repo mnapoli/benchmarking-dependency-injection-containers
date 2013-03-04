@@ -75,7 +75,7 @@ unset($foo);
     <meta name="viewport" content="width-device-width, initial-scale=1">
 </head>
 <body>
-    <div id="chart_div" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div" style="width: 980px; height: 650px;"></div>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">

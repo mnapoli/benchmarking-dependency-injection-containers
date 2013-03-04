@@ -50,6 +50,17 @@ $bm->end('benchmark5', 'orno');
 unset($orno);
 unset($foo);
 
+// Aura.Di
+$bm->start('benchmark5', 'aura');
+$aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
+$aura->setter['Benchmark\Stubs\Bam']['setBart'] = $aura->lazyNew('Benchmark\Stubs\Bart');
+$aura->setter['Benchmark\Stubs\Baz']['setBam'] = $aura->lazyNew('Benchmark\Stubs\Bam');
+$aura->setter['Benchmark\Stubs\Bar']['setBaz'] = $aura->lazyNew('Benchmark\Stubs\Baz');
+$aura->setter['Benchmark\Stubs\Foo']['setBar'] = $aura->lazyNew('Benchmark\Stubs\Bar');
+$foo = $aura->newInstance('Benchmark\Stubs\Foo');
+$bm->end('benchmark5', 'aura');
+unset($aura);
+unset($foo);
 ?>
 
 
@@ -62,7 +73,7 @@ unset($foo);
     <meta name="viewport" content="width-device-width, initial-scale=1">
 </head>
 <body>
-    <div id="chart_div" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div" style="width: 980px; height: 650px;"></div>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -72,7 +83,8 @@ unset($foo);
         var data = google.visualization.arrayToDataTable([
             ['Component', 'Time Taken'],
             ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkData('benchmark5')['symfony']['time'][0] ?>],
-            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark5')['orno']['time'][0] ?>]
+            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark5')['orno']['time'][0] ?>],
+            ['Aura.Di', <?= $bm->getBenchmarkData('benchmark5')['aura']['time'][0] ?>]
         ]);
 
         var options = {

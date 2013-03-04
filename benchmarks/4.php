@@ -65,10 +65,10 @@ unset($foo);
 // Aura.Di
 $bm->start('benchmark4', 'aura');
 $aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
-$aura->params['Benchmark\Stubs\Bam'] = ['bart' => $aura->newInstance('Benchmark\Stubs\Bart')];
-$aura->params['Benchmark\Stubs\Baz'] = ['bam' => $aura->newInstance('Benchmark\Stubs\Bam')];
-$aura->params['Benchmark\Stubs\Bar'] = ['baz' => $aura->newInstance('Benchmark\Stubs\Baz')];
-$aura->params['Benchmark\Stubs\Foo'] = ['bar' => $aura->newInstance('Benchmark\Stubs\Bar')];
+$aura->params['Benchmark\Stubs\Bam'] = ['bart' => $aura->lazyNew('Benchmark\Stubs\Bart')];
+$aura->params['Benchmark\Stubs\Baz'] = ['bam' => $aura->lazyNew('Benchmark\Stubs\Bam')];
+$aura->params['Benchmark\Stubs\Bar'] = ['baz' => $aura->lazyNew('Benchmark\Stubs\Baz')];
+$aura->params['Benchmark\Stubs\Foo'] = ['bar' => $aura->lazyNew('Benchmark\Stubs\Bar')];
 $foo = $aura->newInstance('Benchmark\Stubs\Foo');
 $bm->end('benchmark4', 'aura');
 unset($aura);
@@ -84,7 +84,7 @@ unset($foo);
     <meta name="viewport" content="width-device-width, initial-scale=1">
 </head>
 <body>
-    <div id="chart_div" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div" style="width: 980px; height: 650px;"></div>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
