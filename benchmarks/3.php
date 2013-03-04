@@ -70,6 +70,21 @@ $bm->end('benchmark3', 'pimple');
 unset($pimple);
 unset($foo);
 
+// Orno\Di
+$bm->start('benchmark3', 'aura');
+$aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
+$aura->set('foo', function() {
+    $bart = new Benchmark\Stubs\Bart;
+    $bam = new Benchmark\Stubs\Bam($bart);
+    $baz = new Benchmark\Stubs\Baz($bam);
+    $bar = new Benchmark\Stubs\Bar($baz);
+    return new Benchmark\Stubs\Foo($bar);
+});
+$foo = $aura->get('foo');
+$bm->end('benchmark3', 'orno');
+unset($orno);
+unset($foo);
+
 ?>
 
 <!doctype html>

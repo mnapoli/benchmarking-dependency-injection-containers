@@ -7,7 +7,8 @@
         "pimple/pimple": "dev-trigger",
         "illuminate/container": "4.0.*@dev",
         "zendframework/zend-di": "dev-master",
-        "symfony/dependency-injection": "2.2.*@dev"
+        "symfony/dependency-injection": "2.2.*@dev",
+        "aura/di": "dev-master"
     },
     "minimum-stability": "dev",
     "extra": {
