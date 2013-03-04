@@ -70,7 +70,7 @@ $bm->end('benchmark3', 'pimple');
 unset($pimple);
 unset($foo);
 
-// Orno\Di
+// Aura.Di
 $bm->start('benchmark3', 'aura');
 $aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
 $aura->set('foo', function() {
@@ -81,7 +81,7 @@ $aura->set('foo', function() {
     return new Benchmark\Stubs\Foo($bar);
 });
 $foo = $aura->get('foo');
-$bm->end('benchmark3', 'orno');
+$bm->end('benchmark3', 'aura');
 unset($orno);
 unset($foo);
 
@@ -107,7 +107,8 @@ unset($foo);
             ['Component', 'Time Taken'],
             ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkData('benchmark3')['laravel']['time'][0] ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark3')['orno']['time'][0] ?>],
-            ['Pimple', <?= $bm->getBenchmarkData('benchmark3')['pimple']['time'][0] ?>]
+            ['Pimple', <?= $bm->getBenchmarkData('benchmark3')['pimple']['time'][0] ?>],
+            ['Aura.Di', <?= $bm->getBenchmarkData('benchmark3')['aura']['time'][0] ?>]
         ]);
 
         var options = {

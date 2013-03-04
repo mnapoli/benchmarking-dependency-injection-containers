@@ -62,6 +62,17 @@ $bm->end('benchmark4', 'zend');
 unset($zend);
 unset($foo);
 
+// Aura.Di
+$bm->start('benchmark4', 'aura');
+$aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
+$aura->params['Benchmark\Stubs\Bam'] = ['bart' => $aura->newInstance('Benchmark\Stubs\Bart')];
+$aura->params['Benchmark\Stubs\Baz'] = ['bam' => $aura->newInstance('Benchmark\Stubs\Bam')];
+$aura->params['Benchmark\Stubs\Bar'] = ['baz' => $aura->newInstance('Benchmark\Stubs\Baz')];
+$aura->params['Benchmark\Stubs\Foo'] = ['bar' => $aura->newInstance('Benchmark\Stubs\Bar')];
+$foo = $aura->newInstance('Benchmark\Stubs\Foo');
+$bm->end('benchmark4', 'aura');
+unset($aura);
+unset($foo);
 ?>
 
 <!doctype html>
@@ -84,7 +95,8 @@ unset($foo);
             ['Component', 'Time Taken'],
             ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkData('benchmark4')['symfony']['time'][0] ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark4')['orno']['time'][0] ?>],
-            ['Zend\\Di', <?= $bm->getBenchmarkData('benchmark4')['zend']['time'][0] ?>]
+            ['Zend\\Di', <?= $bm->getBenchmarkData('benchmark4')['zend']['time'][0] ?>],
+            ['Aura.Di', <?= $bm->getBenchmarkData('benchmark4')['aura']['time'][0] ?>]
         ]);
 
         var options = {
