@@ -82,7 +82,22 @@ $aura->set('foo', function() {
 });
 $foo = $aura->get('foo');
 $bm->end('benchmark3', 'aura');
-unset($orno);
+unset($aura);
+unset($foo);
+
+// PHP-DI
+$bm->start('benchmark3', 'php-di');
+$phpdi = DI\Container::getInstance();
+$phpdi->set('foo', function() {
+    $bart = new Benchmark\Stubs\Bart;
+    $bam = new Benchmark\Stubs\Bam($bart);
+    $baz = new Benchmark\Stubs\Baz($bam);
+    $bar = new Benchmark\Stubs\Bar($baz);
+    return new Benchmark\Stubs\Foo($bar);
+});
+$foo = $phpdi->get('foo');
+$bm->end('benchmark3', 'php-di');
+unset($phpdi);
 unset($foo);
 
 ?>
@@ -108,7 +123,8 @@ unset($foo);
             ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkData('benchmark3')['laravel']['time'][0] ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark3')['orno']['time'][0] ?>],
             ['Pimple', <?= $bm->getBenchmarkData('benchmark3')['pimple']['time'][0] ?>],
-            ['Aura.Di', <?= $bm->getBenchmarkData('benchmark3')['aura']['time'][0] ?>]
+            ['Aura.Di', <?= $bm->getBenchmarkData('benchmark3')['aura']['time'][0] ?>],
+            ['PHP-DI', <?= $bm->getBenchmarkData('benchmark3')['php-di']['time'][0] ?>]
         ]);
 
         var options = {

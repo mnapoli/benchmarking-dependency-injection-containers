@@ -8,12 +8,16 @@
         "illuminate/container": "4.0.*@dev",
         "zendframework/zend-di": "dev-master",
         "symfony/dependency-injection": "2.2.*@dev",
-        "aura/di": "dev-master"
+        "aura/di": "dev-master",
+        "mnapoli/php-di": "dev-master"
     },
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }
+    },
+    "autoload": {
+        "psr-0": {"Benchmark": "src/"}
     }
 }
