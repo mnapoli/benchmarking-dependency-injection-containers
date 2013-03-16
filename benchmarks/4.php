@@ -19,60 +19,64 @@ unset($bart);
 
 $bm = new Benchmark\Timer;
 
-/*******************************************************************************
- Benchmark 4: Constructor injection with defined arguments.
- Excluded: Laravel, Pimple, Zend
-********************************************************************************/
+for ($i = 0; $i < 100; $i++) {
 
-// Orno\Di
-$bm->start('benchmark4', 'orno');
-$orno = new Orno\Di\Container;
-$orno->register('Benchmark\Stubs\Bart');
-$orno->register('Benchmark\Stubs\Bam')->withArgument('Benchmark\Stubs\Bart');
-$orno->register('Benchmark\Stubs\Baz')->withArgument('Benchmark\Stubs\Bam');
-$orno->register('Benchmark\Stubs\Bar')->withArgument('Benchmark\Stubs\Baz');
-$orno->register('Benchmark\Stubs\Foo')->withArgument('Benchmark\Stubs\Bar');
-$foo = $orno->resolve('Benchmark\Stubs\Foo');
-$bm->end('benchmark4', 'orno');
-unset($orno);
-unset($foo);
+    /*******************************************************************************
+     Benchmark 4: Constructor injection with defined arguments.
+     Excluded: Laravel, Pimple, Zend
+    ********************************************************************************/
 
-// Symfony\DependencyInjection
-$bm->start('benchmark4', 'symfony');
-$symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
-$symfony->register('foo', 'Benchmark\Stubs\Foo')->addArgument(new Symfony\Component\DependencyInjection\Reference('bar'));
-$symfony->register('bar', 'Benchmark\Stubs\Bar')->addArgument(new Symfony\Component\DependencyInjection\Reference('baz'));
-$symfony->register('baz', 'Benchmark\Stubs\Baz')->addArgument(new Symfony\Component\DependencyInjection\Reference('bam'));
-$symfony->register('bam', 'Benchmark\Stubs\Bam')->addArgument(new Symfony\Component\DependencyInjection\Reference('bart'));
-$symfony->register('bart', 'Benchmark\Stubs\Bart');
-$foo = $symfony->get('foo');
-$bm->end('benchmark4', 'symfony');
-unset($symfony);
-unset($foo);
+    // Orno\Di
+    $bm->start('benchmark4', 'orno');
+    $orno = new Orno\Di\Container;
+    $orno->register('Benchmark\Stubs\Bart');
+    $orno->register('Benchmark\Stubs\Bam')->withArgument('Benchmark\Stubs\Bart');
+    $orno->register('Benchmark\Stubs\Baz')->withArgument('Benchmark\Stubs\Bam');
+    $orno->register('Benchmark\Stubs\Bar')->withArgument('Benchmark\Stubs\Baz');
+    $orno->register('Benchmark\Stubs\Foo')->withArgument('Benchmark\Stubs\Bar');
+    $foo = $orno->resolve('Benchmark\Stubs\Foo');
+    $bm->end('benchmark4', 'orno');
+    unset($orno);
+    unset($foo);
 
-// Zend\Di
-$bm->start('benchmark4', 'zend');
-$zend = new Zend\Di\Di;
-$zend->instanceManager()->setInjections('Benchmark\Stubs\Foo', ['Benchmark\Stubs\Bar']);
-$zend->instanceManager()->setInjections('Benchmark\Stubs\Bar', ['Benchmark\Stubs\Baz']);
-$zend->instanceManager()->setInjections('Benchmark\Stubs\Baz', ['Benchmark\Stubs\Bam']);
-$zend->instanceManager()->setInjections('Benchmark\Stubs\Bam', ['Benchmark\Stubs\Bart']);
-$foo = $zend->get('Benchmark\Stubs\Foo');
-$bm->end('benchmark4', 'zend');
-unset($zend);
-unset($foo);
+    // Symfony\DependencyInjection
+    $bm->start('benchmark4', 'symfony');
+    $symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
+    $symfony->register('foo', 'Benchmark\Stubs\Foo')->addArgument(new Symfony\Component\DependencyInjection\Reference('bar'));
+    $symfony->register('bar', 'Benchmark\Stubs\Bar')->addArgument(new Symfony\Component\DependencyInjection\Reference('baz'));
+    $symfony->register('baz', 'Benchmark\Stubs\Baz')->addArgument(new Symfony\Component\DependencyInjection\Reference('bam'));
+    $symfony->register('bam', 'Benchmark\Stubs\Bam')->addArgument(new Symfony\Component\DependencyInjection\Reference('bart'));
+    $symfony->register('bart', 'Benchmark\Stubs\Bart');
+    $foo = $symfony->get('foo');
+    $bm->end('benchmark4', 'symfony');
+    unset($symfony);
+    unset($foo);
 
-// Aura.Di
-$bm->start('benchmark4', 'aura');
-$aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
-$aura->params['Benchmark\Stubs\Bam'] = ['bart' => $aura->lazyNew('Benchmark\Stubs\Bart')];
-$aura->params['Benchmark\Stubs\Baz'] = ['bam' => $aura->lazyNew('Benchmark\Stubs\Bam')];
-$aura->params['Benchmark\Stubs\Bar'] = ['baz' => $aura->lazyNew('Benchmark\Stubs\Baz')];
-$aura->params['Benchmark\Stubs\Foo'] = ['bar' => $aura->lazyNew('Benchmark\Stubs\Bar')];
-$foo = $aura->newInstance('Benchmark\Stubs\Foo');
-$bm->end('benchmark4', 'aura');
-unset($aura);
-unset($foo);
+    // Zend\Di
+    $bm->start('benchmark4', 'zend');
+    $zend = new Zend\Di\Di;
+    $zend->instanceManager()->setInjections('Benchmark\Stubs\Foo', ['Benchmark\Stubs\Bar']);
+    $zend->instanceManager()->setInjections('Benchmark\Stubs\Bar', ['Benchmark\Stubs\Baz']);
+    $zend->instanceManager()->setInjections('Benchmark\Stubs\Baz', ['Benchmark\Stubs\Bam']);
+    $zend->instanceManager()->setInjections('Benchmark\Stubs\Bam', ['Benchmark\Stubs\Bart']);
+    $foo = $zend->get('Benchmark\Stubs\Foo');
+    $bm->end('benchmark4', 'zend');
+    unset($zend);
+    unset($foo);
+
+    // Aura.Di
+    $bm->start('benchmark4', 'aura');
+    $aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
+    $aura->params['Benchmark\Stubs\Bam'] = ['bart' => $aura->lazyNew('Benchmark\Stubs\Bart')];
+    $aura->params['Benchmark\Stubs\Baz'] = ['bam' => $aura->lazyNew('Benchmark\Stubs\Bam')];
+    $aura->params['Benchmark\Stubs\Bar'] = ['baz' => $aura->lazyNew('Benchmark\Stubs\Baz')];
+    $aura->params['Benchmark\Stubs\Foo'] = ['bar' => $aura->lazyNew('Benchmark\Stubs\Bar')];
+    $foo = $aura->newInstance('Benchmark\Stubs\Foo');
+    $bm->end('benchmark4', 'aura');
+    unset($aura);
+    unset($foo);
+
+}
 ?>
 
 <!doctype html>
@@ -93,10 +97,10 @@ unset($foo);
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Component', 'Time Taken'],
-            ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkData('benchmark4')['symfony']['time'][0] ?>],
-            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark4')['orno']['time'][0] ?>],
-            ['Zend\\Di', <?= $bm->getBenchmarkData('benchmark4')['zend']['time'][0] ?>],
-            ['Aura.Di', <?= $bm->getBenchmarkData('benchmark4')['aura']['time'][0] ?>]
+            ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkTotal('benchmark4', 'symfony') ?>],
+            ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark4', 'orno') ?>],
+            ['Zend\\Di', <?= $bm->getBenchmarkTotal('benchmark4', 'zend') ?>],
+            ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark4', 'aura') ?>]
         ]);
 
         var options = {

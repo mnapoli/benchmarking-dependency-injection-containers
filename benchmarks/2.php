@@ -19,50 +19,71 @@ unset($bart);
 
 $bm = new Benchmark\Timer;
 
-/*******************************************************************************
- Benchmark 2: Auto resolution of object and dependencies.
- (Register all objects with container)
- Excluded: Pimple, Symfony
-********************************************************************************/
+for ($i = 0; $i < 1000; $i++) {
 
-// Illuminate\Container (Laravel)
-$bm->start('benchmark2', 'laravel');
-$illuminate = new Illuminate\Container\Container;
-$illuminate->bind('Foo', 'Benchmark\Stubs\Foo');
-$illuminate->bind('Benchmark\Stubs\Bar');
-$illuminate->bind('Benchmark\Stubs\Bam');
-$illuminate->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
-$illuminate->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
-$foo = $illuminate->make('Foo');
-$bm->end('benchmark2', 'laravel');
-unset($illuminate);
-unset($foo);
+    /*******************************************************************************
+     Benchmark 2: Auto resolution of object and dependencies.
+     (Register all objects with container)
+     Excluded: Pimple, Symfony
+    ********************************************************************************/
 
-// Orno\Di
-$bm->start('benchmark2', 'orno');
-$orno = (new Orno\Di\Container)->autoResolve(true);
-$orno->register('Benchmark\Stubs\Foo');
-$orno->register('Benchmark\Stubs\Bar');
-$orno->register('Benchmark\Stubs\Bam');
-$orno->register('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
-$orno->register('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
-$foo = $orno->resolve('Benchmark\Stubs\Foo');
-$bm->end('benchmark2', 'orno');
-unset($orno);
-unset($foo);
+    // Illuminate\Container (Laravel)
+    $bm->start('benchmark2', 'laravel');
+    $illuminate = new Illuminate\Container\Container;
+    $illuminate->bind('Foo', 'Benchmark\Stubs\Foo');
+    $illuminate->bind('Benchmark\Stubs\Bar');
+    $illuminate->bind('Benchmark\Stubs\Bam');
+    $illuminate->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
+    $illuminate->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
+    $foo = $illuminate->make('Foo');
+    $bm->end('benchmark2', 'laravel');
+    unset($illuminate);
+    unset($foo);
 
-// Zend\Di
-$bm->start('benchmark2', 'zend');
-$zend = new Zend\Di\Di;
-$zend->instanceManager()->addTypePreference('Benchmark\Stubs\Foo', 'Benchmark\Stubs\Foo');
-$zend->instanceManager()->addTypePreference('Benchmark\Stubs\Bar', 'Benchmark\Stubs\Bar');
-$zend->instanceManager()->addTypePreference('Benchmark\Stubs\Bam', 'Benchmark\Stubs\Bam');
-$zend->instanceManager()->addTypePreference('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
-$zend->instanceManager()->addTypePreference('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
-$foo = $zend->get('Benchmark\Stubs\Foo');
-$bm->end('benchmark2', 'zend');
-unset($zend);
-unset($foo);
+    // Orno\Di
+    $bm->start('benchmark2', 'orno');
+    $orno = (new Orno\Di\Container)->autoResolve(true);
+    $orno->register('Benchmark\Stubs\Foo');
+    $orno->register('Benchmark\Stubs\Bar');
+    $orno->register('Benchmark\Stubs\Bam');
+    $orno->register('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
+    $orno->register('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
+    $foo = $orno->resolve('Benchmark\Stubs\Foo');
+    $bm->end('benchmark2', 'orno');
+    unset($orno);
+    unset($foo);
+
+    // Zend\Di
+    $bm->start('benchmark2', 'zend');
+    $zend = new Zend\Di\Di;
+    $zend->instanceManager()->addTypePreference('Benchmark\Stubs\Foo', 'Benchmark\Stubs\Foo');
+    $zend->instanceManager()->addTypePreference('Benchmark\Stubs\Bar', 'Benchmark\Stubs\Bar');
+    $zend->instanceManager()->addTypePreference('Benchmark\Stubs\Bam', 'Benchmark\Stubs\Bam');
+    $zend->instanceManager()->addTypePreference('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
+    $zend->instanceManager()->addTypePreference('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
+    $foo = $zend->get('Benchmark\Stubs\Foo');
+    $bm->end('benchmark2', 'zend');
+    unset($zend);
+    unset($foo);
+
+    // PHP-DI
+    $bm->start('benchmark2', 'php-di');
+    DI\Container::reset();
+    $phpdi = DI\Container::getInstance();
+    DI\Container::addConfiguration(
+        array(
+            "aliases" => array(
+                'Benchmark\Stubs\BazInterface' => 'Benchmark\Stubs\Baz',
+                'Benchmark\Stubs\BartInterface' => 'Benchmark\Stubs\Bart',
+            ),
+        )
+    );
+    $foo = $phpdi->get('Benchmark\Stubs\Foo');
+    $bm->end('benchmark2', 'php-di');
+    unset($phpdi);
+    unset($foo);
+
+}
 
 ?>
 
@@ -84,9 +105,10 @@ unset($foo);
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Component', 'Time Taken'],
-            ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkData('benchmark2')['laravel']['time'][0] ?>],
-            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark2')['orno']['time'][0] ?>],
-            ['Zend\\Di', <?= $bm->getBenchmarkData('benchmark2')['zend']['time'][0] ?>]
+            ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkTotal('benchmark2', 'laravel') ?>],
+            ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark2', 'orno') ?>],
+            ['Zend\\Di', <?= $bm->getBenchmarkTotal('benchmark2', 'zend') ?>],
+            ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark2', 'php-di') ?>]
         ]);
 
         var options = {

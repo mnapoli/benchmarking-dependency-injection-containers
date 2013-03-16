@@ -19,48 +19,52 @@ unset($bart);
 
 $bm = new Benchmark\Timer;
 
-/*******************************************************************************
- Benchmark 5: Setter injection with defined setter methods.
- Excluded: Laravel, Pimple, Zend
-********************************************************************************/
+for ($i = 0; $i < 1000; $i++) {
 
-// Symfony\DependencyInjection
-$bm->start('benchmark5', 'symfony');
-$symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
-$symfony->register('foo', 'Benchmark\Stubs\Foo')->addMethodCall('setBar', [new Symfony\Component\DependencyInjection\Reference('bar')]);
-$symfony->register('bar', 'Benchmark\Stubs\Bar')->addMethodCall('setBaz', [new Symfony\Component\DependencyInjection\Reference('baz')]);
-$symfony->register('baz', 'Benchmark\Stubs\Baz')->addMethodCall('setBam', [new Symfony\Component\DependencyInjection\Reference('bam')]);
-$symfony->register('bam', 'Benchmark\Stubs\Bam')->addMethodCall('setBart', [new Symfony\Component\DependencyInjection\Reference('bart')]);
-$symfony->register('bart', 'Benchmark\Stubs\Bart');
-$foo = $symfony->get('foo');
-$bm->end('benchmark5', 'symfony');
-unset($symfony);
-unset($foo);
+    /*******************************************************************************
+     Benchmark 5: Setter injection with defined setter methods.
+     Excluded: Laravel, Pimple, Zend
+    ********************************************************************************/
 
-// Orno\Di
-$bm->start('benchmark5', 'orno');
-$orno = new Orno\Di\Container;
-$orno->register('Benchmark\Stubs\Bart');
-$orno->register('Benchmark\Stubs\Bam')->withMethodCall('setBart', ['Benchmark\Stubs\Bart']);
-$orno->register('Benchmark\Stubs\Baz')->withMethodCall('setBam', ['Benchmark\Stubs\Bam']);
-$orno->register('Benchmark\Stubs\Bar')->withMethodCall('setBaz', ['Benchmark\Stubs\Baz']);
-$orno->register('Benchmark\Stubs\Foo')->withMethodCall('setBar', ['Benchmark\Stubs\Bar']);
-$foo = $orno->resolve('Benchmark\Stubs\Foo');
-$bm->end('benchmark5', 'orno');
-unset($orno);
-unset($foo);
+    // Symfony\DependencyInjection
+    $bm->start('benchmark5', 'symfony');
+    $symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
+    $symfony->register('foo', 'Benchmark\Stubs\Foo')->addMethodCall('setBar', [new Symfony\Component\DependencyInjection\Reference('bar')]);
+    $symfony->register('bar', 'Benchmark\Stubs\Bar')->addMethodCall('setBaz', [new Symfony\Component\DependencyInjection\Reference('baz')]);
+    $symfony->register('baz', 'Benchmark\Stubs\Baz')->addMethodCall('setBam', [new Symfony\Component\DependencyInjection\Reference('bam')]);
+    $symfony->register('bam', 'Benchmark\Stubs\Bam')->addMethodCall('setBart', [new Symfony\Component\DependencyInjection\Reference('bart')]);
+    $symfony->register('bart', 'Benchmark\Stubs\Bart');
+    $foo = $symfony->get('foo');
+    $bm->end('benchmark5', 'symfony');
+    unset($symfony);
+    unset($foo);
 
-// Aura.Di
-$bm->start('benchmark5', 'aura');
-$aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
-$aura->setter['Benchmark\Stubs\Bam']['setBart'] = $aura->lazyNew('Benchmark\Stubs\Bart');
-$aura->setter['Benchmark\Stubs\Baz']['setBam'] = $aura->lazyNew('Benchmark\Stubs\Bam');
-$aura->setter['Benchmark\Stubs\Bar']['setBaz'] = $aura->lazyNew('Benchmark\Stubs\Baz');
-$aura->setter['Benchmark\Stubs\Foo']['setBar'] = $aura->lazyNew('Benchmark\Stubs\Bar');
-$foo = $aura->newInstance('Benchmark\Stubs\Foo');
-$bm->end('benchmark5', 'aura');
-unset($aura);
-unset($foo);
+    // Orno\Di
+    $bm->start('benchmark5', 'orno');
+    $orno = new Orno\Di\Container;
+    $orno->register('Benchmark\Stubs\Bart');
+    $orno->register('Benchmark\Stubs\Bam')->withMethodCall('setBart', ['Benchmark\Stubs\Bart']);
+    $orno->register('Benchmark\Stubs\Baz')->withMethodCall('setBam', ['Benchmark\Stubs\Bam']);
+    $orno->register('Benchmark\Stubs\Bar')->withMethodCall('setBaz', ['Benchmark\Stubs\Baz']);
+    $orno->register('Benchmark\Stubs\Foo')->withMethodCall('setBar', ['Benchmark\Stubs\Bar']);
+    $foo = $orno->resolve('Benchmark\Stubs\Foo');
+    $bm->end('benchmark5', 'orno');
+    unset($orno);
+    unset($foo);
+
+    // Aura.Di
+    $bm->start('benchmark5', 'aura');
+    $aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
+    $aura->setter['Benchmark\Stubs\Bam']['setBart'] = $aura->lazyNew('Benchmark\Stubs\Bart');
+    $aura->setter['Benchmark\Stubs\Baz']['setBam'] = $aura->lazyNew('Benchmark\Stubs\Bam');
+    $aura->setter['Benchmark\Stubs\Bar']['setBaz'] = $aura->lazyNew('Benchmark\Stubs\Baz');
+    $aura->setter['Benchmark\Stubs\Foo']['setBar'] = $aura->lazyNew('Benchmark\Stubs\Bar');
+    $foo = $aura->newInstance('Benchmark\Stubs\Foo');
+    $bm->end('benchmark5', 'aura');
+    unset($aura);
+    unset($foo);
+
+}
 ?>
 
 
@@ -82,9 +86,9 @@ unset($foo);
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Component', 'Time Taken'],
-            ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkData('benchmark5')['symfony']['time'][0] ?>],
-            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark5')['orno']['time'][0] ?>],
-            ['Aura.Di', <?= $bm->getBenchmarkData('benchmark5')['aura']['time'][0] ?>]
+            ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkTotal('benchmark5', 'symfony') ?>],
+            ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark5', 'orno') ?>],
+            ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark5', 'aura') ?>]
         ]);
 
         var options = {
