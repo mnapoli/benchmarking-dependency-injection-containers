@@ -60,6 +60,7 @@ for ($i = 0; $i < 1000; $i++) {
 
     // PHP-DI
     $bm->start('benchmark1', 'php-di');
+    DI\Container::reset();
     $phpdi = DI\Container::getInstance();
     DI\Container::addConfiguration(
         array(

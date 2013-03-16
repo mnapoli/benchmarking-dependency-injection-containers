@@ -89,6 +89,7 @@ for ($i = 0; $i < 10000; $i++) {
 
     // PHP-DI
     $bm->start('benchmark3', 'php-di');
+    DI\Container::reset();
     $phpdi = DI\Container::getInstance();
     $phpdi->set('foo', function() {
         $bart = new Benchmark\Stubs\Bart;
