@@ -17,9 +17,9 @@ unset($baz);
 unset($bam);
 unset($bart);
 
-for ($i = 0; $i < 1000; $i++) {
+$bm = new Benchmark\Timer;
 
-    $bm = new Benchmark\Timer;
+for ($i = 0; $i < 1000; $i++) {
 
     /*******************************************************************************
      Benchmark 5: Setter injection with defined setter methods.
@@ -64,14 +64,6 @@ for ($i = 0; $i < 1000; $i++) {
     unset($aura);
     unset($foo);
 
-    // PHP-DI
-    $bm->start('benchmark5', 'php-di');
-    $phpdi = DI\Container::getInstance();
-    $foo = $phpdi->get('Benchmark\Stubs\FooAnnotated');
-    $bm->end('benchmark5', 'php-di');
-    unset($phpdi);
-    unset($foo);
-
 }
 ?>
 
@@ -96,8 +88,7 @@ for ($i = 0; $i < 1000; $i++) {
             ['Component', 'Time Taken'],
             ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkTotal('benchmark5', 'symfony') ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark5', 'orno') ?>],
-            ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark5', 'aura') ?>],
-            ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark5', 'php-di') ?>]
+            ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark5', 'aura') ?>]
         ]);
 
         var options = {
