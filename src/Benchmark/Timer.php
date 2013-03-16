@@ -26,6 +26,7 @@ class Timer
         foreach ($this->benchmarks[$benchmark][$component]['time'] as $number) {
             $total += $number;
         }
+        $total = $total / 1000;
         return number_format($total, 6);
     }
 }
