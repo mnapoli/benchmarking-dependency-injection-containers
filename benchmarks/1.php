@@ -56,6 +56,22 @@ $bm->end('benchmark1', 'zend');
 unset($zend);
 unset($foo);
 
+// PHP-DI
+$bm->start('benchmark1', 'php-di');
+$phpdi = DI\Container::getInstance();
+DI\Container::addConfiguration(
+    array(
+        "aliases" => array(
+            'Benchmark\Stubs\BazInterface' => 'Benchmark\Stubs\Baz',
+            'Benchmark\Stubs\BartInterface' => 'Benchmark\Stubs\Bart',
+        ),
+    )
+);
+$foo = $phpdi->get('Benchmark\Stubs\Foo');
+$bm->end('benchmark1', 'php-di');
+unset($phpdi);
+unset($foo);
+
 ?>
 
 <!doctype html>
@@ -78,7 +94,8 @@ unset($foo);
             ['Component', 'Time Taken'],
             ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkData('benchmark1')['laravel']['time'][0] ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark1')['orno']['time'][0] ?>],
-            ['Zend\\Di', <?= $bm->getBenchmarkData('benchmark1')['zend']['time'][0] ?>]
+            ['Zend\\Di', <?= $bm->getBenchmarkData('benchmark1')['zend']['time'][0] ?>],
+            ['PHP-DI', <?= $bm->getBenchmarkData('benchmark1')['php-di']['time'][0] ?>]
         ]);
 
         var options = {
