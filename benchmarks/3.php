@@ -19,86 +19,90 @@ unset($bart);
 
 $bm = new Benchmark\Timer;
 
-/*******************************************************************************
- Benchmark 3: Factory closure resolution.
- (Expecting this to be pretty much the same for each)
- Excluded: Zend, Symfony
-********************************************************************************/
+for ($i = 0; $i < 10000; $i++) {
 
-// Illuminate\Container (Laravel)
-$bm->start('benchmark3', 'laravel');
-$illuminate = new Illuminate\Container\Container;
-$illuminate->bind('foo', function() {
-    $bart = new Benchmark\Stubs\Bart;
-    $bam = new Benchmark\Stubs\Bam($bart);
-    $baz = new Benchmark\Stubs\Baz($bam);
-    $bar = new Benchmark\Stubs\Bar($baz);
-    return new Benchmark\Stubs\Foo($bar);
-});
-$foo = $illuminate->make('foo');
-$bm->end('benchmark3', 'laravel');
-unset($illuminate);
-unset($foo);
+    /*******************************************************************************
+     Benchmark 3: Factory closure resolution.
+     (Expecting this to be pretty much the same for each)
+     Excluded: Zend, Symfony
+    ********************************************************************************/
 
-// Orno\Di
-$bm->start('benchmark3', 'orno');
-$orno = new Orno\Di\Container;
-$orno->register('foo', function() {
-    $bart = new Benchmark\Stubs\Bart;
-    $bam = new Benchmark\Stubs\Bam($bart);
-    $baz = new Benchmark\Stubs\Baz($bam);
-    $bar = new Benchmark\Stubs\Bar($baz);
-    return new Benchmark\Stubs\Foo($bar);
-});
-$foo = $orno->resolve('foo');
-$bm->end('benchmark3', 'orno');
-unset($orno);
-unset($foo);
+    // Illuminate\Container (Laravel)
+    $bm->start('benchmark3', 'laravel');
+    $illuminate = new Illuminate\Container\Container;
+    $illuminate->bind('foo', function() {
+        $bart = new Benchmark\Stubs\Bart;
+        $bam = new Benchmark\Stubs\Bam($bart);
+        $baz = new Benchmark\Stubs\Baz($bam);
+        $bar = new Benchmark\Stubs\Bar($baz);
+        return new Benchmark\Stubs\Foo($bar);
+    });
+    $foo = $illuminate->make('foo');
+    $bm->end('benchmark3', 'laravel');
+    unset($illuminate);
+    unset($foo);
 
-// Pimple
-$bm->start('benchmark3', 'pimple');
-$pimple = new Pimple;
-$pimple['foo'] = function() {
-    $bart = new Benchmark\Stubs\Bart;
-    $bam = new Benchmark\Stubs\Bam($bart);
-    $baz = new Benchmark\Stubs\Baz($bam);
-    $bar = new Benchmark\Stubs\Bar($baz);
-    return new Benchmark\Stubs\Foo($bar);
-};
-$foo = $pimple['foo'];
-$bm->end('benchmark3', 'pimple');
-unset($pimple);
-unset($foo);
+    // Orno\Di
+    $bm->start('benchmark3', 'orno');
+    $orno = new Orno\Di\Container;
+    $orno->register('foo', function() {
+        $bart = new Benchmark\Stubs\Bart;
+        $bam = new Benchmark\Stubs\Bam($bart);
+        $baz = new Benchmark\Stubs\Baz($bam);
+        $bar = new Benchmark\Stubs\Bar($baz);
+        return new Benchmark\Stubs\Foo($bar);
+    });
+    $foo = $orno->resolve('foo');
+    $bm->end('benchmark3', 'orno');
+    unset($orno);
+    unset($foo);
 
-// Aura.Di
-$bm->start('benchmark3', 'aura');
-$aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
-$aura->set('foo', function() {
-    $bart = new Benchmark\Stubs\Bart;
-    $bam = new Benchmark\Stubs\Bam($bart);
-    $baz = new Benchmark\Stubs\Baz($bam);
-    $bar = new Benchmark\Stubs\Bar($baz);
-    return new Benchmark\Stubs\Foo($bar);
-});
-$foo = $aura->get('foo');
-$bm->end('benchmark3', 'aura');
-unset($aura);
-unset($foo);
+    // Pimple
+    $bm->start('benchmark3', 'pimple');
+    $pimple = new Pimple;
+    $pimple['foo'] = function() {
+        $bart = new Benchmark\Stubs\Bart;
+        $bam = new Benchmark\Stubs\Bam($bart);
+        $baz = new Benchmark\Stubs\Baz($bam);
+        $bar = new Benchmark\Stubs\Bar($baz);
+        return new Benchmark\Stubs\Foo($bar);
+    };
+    $foo = $pimple['foo'];
+    $bm->end('benchmark3', 'pimple');
+    unset($pimple);
+    unset($foo);
 
-// PHP-DI
-$bm->start('benchmark3', 'php-di');
-$phpdi = DI\Container::getInstance();
-$phpdi->set('foo', function() {
-    $bart = new Benchmark\Stubs\Bart;
-    $bam = new Benchmark\Stubs\Bam($bart);
-    $baz = new Benchmark\Stubs\Baz($bam);
-    $bar = new Benchmark\Stubs\Bar($baz);
-    return new Benchmark\Stubs\Foo($bar);
-});
-$foo = $phpdi->get('foo');
-$bm->end('benchmark3', 'php-di');
-unset($phpdi);
-unset($foo);
+    // Aura.Di
+    $bm->start('benchmark3', 'aura');
+    $aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
+    $aura->set('foo', function() {
+        $bart = new Benchmark\Stubs\Bart;
+        $bam = new Benchmark\Stubs\Bam($bart);
+        $baz = new Benchmark\Stubs\Baz($bam);
+        $bar = new Benchmark\Stubs\Bar($baz);
+        return new Benchmark\Stubs\Foo($bar);
+    });
+    $foo = $aura->get('foo');
+    $bm->end('benchmark3', 'aura');
+    unset($aura);
+    unset($foo);
+
+    // PHP-DI
+    $bm->start('benchmark3', 'php-di');
+    $phpdi = DI\Container::getInstance();
+    $phpdi->set('foo', function() {
+        $bart = new Benchmark\Stubs\Bart;
+        $bam = new Benchmark\Stubs\Bam($bart);
+        $baz = new Benchmark\Stubs\Baz($bam);
+        $bar = new Benchmark\Stubs\Bar($baz);
+        return new Benchmark\Stubs\Foo($bar);
+    });
+    $foo = $phpdi->get('foo');
+    $bm->end('benchmark3', 'php-di');
+    unset($phpdi);
+    unset($foo);
+
+}
 
 ?>
 
@@ -120,11 +124,11 @@ unset($foo);
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Component', 'Time Taken'],
-            ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkData('benchmark3')['laravel']['time'][0] ?>],
-            ['Orno\\Di', <?= $bm->getBenchmarkData('benchmark3')['orno']['time'][0] ?>],
-            ['Pimple', <?= $bm->getBenchmarkData('benchmark3')['pimple']['time'][0] ?>],
-            ['Aura.Di', <?= $bm->getBenchmarkData('benchmark3')['aura']['time'][0] ?>],
-            ['PHP-DI', <?= $bm->getBenchmarkData('benchmark3')['php-di']['time'][0] ?>]
+            ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkTotal('benchmark3', 'laravel') ?>],
+            ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark3', 'orno') ?>],
+            ['Pimple', <?= $bm->getBenchmarkTotal('benchmark3', 'pimple') ?>],
+            ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark3', 'aura') ?>],
+            ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark3', 'php-di') ?>]
         ]);
 
         var options = {
