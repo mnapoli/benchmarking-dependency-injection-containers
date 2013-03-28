@@ -88,9 +88,11 @@ for ($i = 0; $i < 10000; $i++) {
     unset($foo);
 
     // PHP-DI
-    $bm->start('benchmark3', 'php-di');
     DI\Container::reset();
+    $bm->start('benchmark3', 'php-di');
     $phpdi = DI\Container::getInstance();
+    $phpdi->getConfiguration()->useReflection(false);
+    $phpdi->getConfiguration()->useAnnotations(false);
     $phpdi->set('foo', function() {
         $bart = new Benchmark\Stubs\Bart;
         $bam = new Benchmark\Stubs\Bam($bart);
