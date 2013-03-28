@@ -67,15 +67,28 @@ for ($i = 0; $i < 1000; $i++) {
     unset($foo);
 
     // PHP-DI
-    $bm->start('benchmark2', 'php-di');
     DI\Container::reset();
+    $bm->start('benchmark2', 'php-di');
     $phpdi = DI\Container::getInstance();
-    DI\Container::addConfiguration(
+    $phpdi->getConfiguration()->useReflection(false);
+    $phpdi->getConfiguration()->useAnnotations(false);
+    $phpdi->getConfiguration()->addDefinitions(
         array(
-            "aliases" => array(
-                'Benchmark\Stubs\BazInterface' => 'Benchmark\Stubs\Baz',
-                'Benchmark\Stubs\BartInterface' => 'Benchmark\Stubs\Bart',
-            ),
+             'Benchmark\Stubs\Foo'  => array(
+                 'class' => 'Benchmark\Stubs\Foo'
+             ),
+             'Benchmark\Stubs\Bar'  => array(
+                 'class' => 'Benchmark\Stubs\Bar'
+             ),
+             'Benchmark\Stubs\Bam'  => array(
+                 'class' => 'Benchmark\Stubs\Bam'
+             ),
+             'Benchmark\Stubs\BazInterface'  => array(
+                 'class' => 'Benchmark\Stubs\Baz'
+             ),
+             'Benchmark\Stubs\BartInterface'  => array(
+                 'class' => 'Benchmark\Stubs\Bart'
+             ),
         )
     );
     $foo = $phpdi->get('Benchmark\Stubs\Foo');

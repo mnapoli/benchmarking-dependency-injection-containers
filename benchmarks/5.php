@@ -64,6 +64,44 @@ for ($i = 0; $i < 1000; $i++) {
     unset($aura);
     unset($foo);
 
+    // PHP-DI
+    DI\Container::reset();
+    $bm->start('benchmark5', 'php-di');
+    $phpdi = DI\Container::getInstance();
+    $phpdi->getConfiguration()->useReflection(false);
+    $phpdi->getConfiguration()->useAnnotations(false);
+    $phpdi->getConfiguration()->addDefinitions(
+        array(
+             'Benchmark\Stubs\Bart'  => array(
+                 'class' => 'Benchmark\Stubs\Bart'
+             ),
+             'Benchmark\Stubs\Bam'  => array(
+                 'methods' => array(
+                     'setBart' => 'Benchmark\Stubs\Bart',
+                 ),
+             ),
+             'Benchmark\Stubs\Baz'  => array(
+                 'methods' => array(
+                     'setBam' => 'Benchmark\Stubs\Bam',
+                 ),
+             ),
+             'Benchmark\Stubs\Bar'  => array(
+                 'methods' => array(
+                     'setBaz' => 'Benchmark\Stubs\Baz',
+                 ),
+             ),
+             'Benchmark\Stubs\Foo'  => array(
+                 'methods' => array(
+                     'setBar' => 'Benchmark\Stubs\Bar',
+                 ),
+             ),
+        )
+    );
+    $foo = $phpdi->get('Benchmark\Stubs\Foo');
+    $bm->end('benchmark5', 'php-di');
+    unset($phpdi);
+    unset($foo);
+
 }
 ?>
 
@@ -88,7 +126,8 @@ for ($i = 0; $i < 1000; $i++) {
             ['Component', 'Time Taken'],
             ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkTotal('benchmark5', 'symfony') ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark5', 'orno') ?>],
-            ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark5', 'aura') ?>]
+            ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark5', 'aura') ?>],
+            ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark5', 'php-di') ?>]
         ]);
 
         var options = {

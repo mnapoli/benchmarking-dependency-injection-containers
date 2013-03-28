@@ -76,6 +76,33 @@ for ($i = 0; $i < 100; $i++) {
     unset($aura);
     unset($foo);
 
+    // PHP-DI
+    DI\Container::reset();
+    $bm->start('benchmark4', 'php-di');
+    $phpdi = DI\Container::getInstance();
+    $phpdi->getConfiguration()->useReflection(false);
+    $phpdi->getConfiguration()->useAnnotations(false);
+    $phpdi->getConfiguration()->addDefinitions(
+        array(
+             'Benchmark\Stubs\Bam'  => array(
+                 'constructor' => array('Benchmark\Stubs\Bart'),
+             ),
+             'Benchmark\Stubs\Baz'  => array(
+                 'constructor' => array('Benchmark\Stubs\Bam'),
+             ),
+             'Benchmark\Stubs\Bar'  => array(
+                 'constructor' => array('Benchmark\Stubs\Baz'),
+             ),
+             'Benchmark\Stubs\Foo'  => array(
+                 'constructor' => array('Benchmark\Stubs\Bar'),
+             ),
+        )
+    );
+    $foo = $phpdi->get('Benchmark\Stubs\Foo');
+    $bm->end('benchmark4', 'php-di');
+    unset($phpdi);
+    unset($foo);
+
 }
 ?>
 
@@ -100,7 +127,8 @@ for ($i = 0; $i < 100; $i++) {
             ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkTotal('benchmark4', 'symfony') ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark4', 'orno') ?>],
             ['Zend\\Di', <?= $bm->getBenchmarkTotal('benchmark4', 'zend') ?>],
-            ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark4', 'aura') ?>]
+            ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark4', 'aura') ?>],
+            ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark4', 'php-di') ?>]
         ]);
 
         var options = {
