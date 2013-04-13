@@ -74,13 +74,10 @@ for ($i = 0; $i < 1000; $i++) {
     $phpdi->addDefinitions(
         array(
              'Benchmark\Stubs\Foo'  => array(
-                 'class' => 'Benchmark\Stubs\Foo'
              ),
              'Benchmark\Stubs\Bar'  => array(
-                 'class' => 'Benchmark\Stubs\Bar'
              ),
              'Benchmark\Stubs\Bam'  => array(
-                 'class' => 'Benchmark\Stubs\Bam'
              ),
              'Benchmark\Stubs\BazInterface'  => array(
                  'class' => 'Benchmark\Stubs\Baz'
