@@ -65,12 +65,11 @@ for ($i = 0; $i < 1000; $i++) {
     unset($foo);
 
     // PHP-DI
-    DI\Container::reset();
     $bm->start('benchmark5', 'php-di');
-    $phpdi = DI\Container::getInstance();
-    $phpdi->getConfiguration()->useReflection(false);
-    $phpdi->getConfiguration()->useAnnotations(false);
-    $phpdi->getConfiguration()->addDefinitions(
+    $phpdi = new DI\Container();
+    $phpdi->useReflection(false);
+    $phpdi->useAnnotations(false);
+    $phpdi->addDefinitions(
         array(
              'Benchmark\Stubs\Bart'  => array(
                  'class' => 'Benchmark\Stubs\Bart'
