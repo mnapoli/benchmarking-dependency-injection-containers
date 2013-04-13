@@ -73,12 +73,9 @@ for ($i = 0; $i < 1000; $i++) {
     $phpdi->useAnnotations(false);
     $phpdi->addDefinitions(
         array(
-             'Benchmark\Stubs\Foo'  => array(
-             ),
-             'Benchmark\Stubs\Bar'  => array(
-             ),
-             'Benchmark\Stubs\Bam'  => array(
-             ),
+             'Benchmark\Stubs\Foo'  => array(),
+             'Benchmark\Stubs\Bar'  => array(),
+             'Benchmark\Stubs\Bam'  => array(),
              'Benchmark\Stubs\BazInterface'  => array(
                  'class' => 'Benchmark\Stubs\Baz'
              ),
