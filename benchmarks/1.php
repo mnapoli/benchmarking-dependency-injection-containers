@@ -59,11 +59,10 @@ for ($i = 0; $i < 1000; $i++) {
     unset($foo);
 
     // PHP-DI
-    DI\Container::reset();
     $bm->start('benchmark1', 'php-di');
-    $phpdi = DI\Container::getInstance();
-    $phpdi->getConfiguration()->useAnnotations(false);
-    $phpdi->getConfiguration()->addDefinitions(
+    $phpdi = new DI\Container();
+    $phpdi->useAnnotations(false);
+    $phpdi->addDefinitions(
         array(
              'Benchmark\Stubs\BazInterface'  => array(
                  'class' => 'Benchmark\Stubs\Baz'
