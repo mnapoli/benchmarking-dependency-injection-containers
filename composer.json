@@ -1,6 +1,12 @@
 {
     "name": "happyaccidents/dic-benchmark",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/dongilbert/loep-di"
+        }
+    ],
     "require": {
         "php": ">=5.4",
         "orno/di": "1.1.0",
@@ -9,7 +15,8 @@
         "zendframework/zend-di": "dev-master",
         "symfony/dependency-injection": "2.2.*@dev",
         "aura/di": "dev-master",
-        "mnapoli/php-di": "3.0.*"
+        "mnapoli/php-di": "3.0.*",
+        "league/di": "dev-master"
     },
     "minimum-stability": "dev",
     "extra": {

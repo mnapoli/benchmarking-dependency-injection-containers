@@ -57,6 +57,21 @@ for ($i = 0; $i < 10000; $i++) {
     unset($orno);
     unset($foo);
 
+    // League\Di
+    $bm->start('benchmark3', 'league');
+    $league = new League\Di\Container;
+    $league->bind('foo', function() {
+        $bart = new Benchmark\Stubs\Bart;
+        $bam = new Benchmark\Stubs\Bam($bart);
+        $baz = new Benchmark\Stubs\Baz($bam);
+        $bar = new Benchmark\Stubs\Bar($baz);
+        return new Benchmark\Stubs\Foo($bar);
+    });
+    $foo = $league->resolve('foo');
+    $bm->end('benchmark3', 'league');
+    unset($orno);
+    unset($foo);
+
     // Pimple
     $bm->start('benchmark3', 'pimple');
     $pimple = new Pimple;
@@ -128,6 +143,7 @@ for ($i = 0; $i < 10000; $i++) {
             ['Component', 'Time Taken'],
             ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkTotal('benchmark3', 'laravel') ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark3', 'orno') ?>],
+            ['League\\Di', <?= $bm->getBenchmarkTotal('benchmark3', 'league') ?>],
             ['Pimple', <?= $bm->getBenchmarkTotal('benchmark3', 'pimple') ?>],
             ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark3', 'aura') ?>],
             ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark3', 'php-di') ?>]

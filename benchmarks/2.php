@@ -53,6 +53,19 @@ for ($i = 0; $i < 1000; $i++) {
     unset($orno);
     unset($foo);
 
+    // League\Di
+    $bm->start('benchmark2', 'league');
+    $league = new League\Di\Container;
+    $league->bind('Benchmark\Stubs\Foo');
+    $league->bind('Benchmark\Stubs\Bar');
+    $league->bind('Benchmark\Stubs\Bam');
+    $league->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
+    $league->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
+    $foo = $league->resolve('Benchmark\Stubs\Foo');
+    $bm->end('benchmark2', 'league');
+    unset($orno);
+    unset($foo);
+
     // Zend\Di
     $bm->start('benchmark2', 'zend');
     $zend = new Zend\Di\Di;
@@ -113,6 +126,7 @@ for ($i = 0; $i < 1000; $i++) {
             ['Component', 'Time Taken'],
             ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkTotal('benchmark2', 'laravel') ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark2', 'orno') ?>],
+            ['League\\Di', <?= $bm->getBenchmarkTotal('benchmark2', 'league') ?>],
             ['Zend\\Di', <?= $bm->getBenchmarkTotal('benchmark2', 'zend') ?>],
             ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark2', 'php-di') ?>]
         ]);

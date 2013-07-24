@@ -39,6 +39,19 @@ for ($i = 0; $i < 100; $i++) {
     unset($orno);
     unset($foo);
 
+    // League\Di
+    $bm->start('benchmark4', 'league');
+    $league = new League\Di\Container;
+    $league->bind('Benchmark\Stubs\Bart');
+    $league->bind('Benchmark\Stubs\Bam')->addArg('Benchmark\Stubs\Bart');
+    $league->bind('Benchmark\Stubs\Baz')->addArg('Benchmark\Stubs\Bam');
+    $league->bind('Benchmark\Stubs\Bar')->addArg('Benchmark\Stubs\Baz');
+    $league->bind('Benchmark\Stubs\Foo')->addArg('Benchmark\Stubs\Bar');
+    $foo = $league->resolve('Benchmark\Stubs\Foo');
+    $bm->end('benchmark4', 'league');
+    unset($orno);
+    unset($foo);
+
     // Symfony\DependencyInjection
     $bm->start('benchmark4', 'symfony');
     $symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -125,6 +138,7 @@ for ($i = 0; $i < 100; $i++) {
             ['Component', 'Time Taken'],
             ['Symfony\\DependencyInjection', <?= $bm->getBenchmarkTotal('benchmark4', 'symfony') ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark4', 'orno') ?>],
+            ['League\\Di', <?= $bm->getBenchmarkTotal('benchmark4', 'league') ?>],
             ['Zend\\Di', <?= $bm->getBenchmarkTotal('benchmark4', 'zend') ?>],
             ['Aura.Di', <?= $bm->getBenchmarkTotal('benchmark4', 'aura') ?>],
             ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark4', 'php-di') ?>]
