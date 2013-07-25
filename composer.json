@@ -1,12 +1,6 @@
 {
     "name": "happyaccidents/dic-benchmark",
     "license": "MIT",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/dongilbert/loep-di"
-        }
-    ],
     "require": {
         "php": ">=5.4",
         "orno/di": "1.1.0",
