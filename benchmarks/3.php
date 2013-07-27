@@ -19,13 +19,13 @@ unset($bart);
 
 $bm = new Benchmark\Timer;
 
-for ($i = 0; $i < 10000; $i++) {
+/*******************************************************************************
+ Benchmark 3: Factory closure resolution.
+ (Expecting this to be pretty much the same for each)
+ Excluded: Zend, Symfony
+********************************************************************************/
 
-    /*******************************************************************************
-     Benchmark 3: Factory closure resolution.
-     (Expecting this to be pretty much the same for each)
-     Excluded: Zend, Symfony
-    ********************************************************************************/
+for ($i = 0; $i < 10000; $i++) {
 
     // Illuminate\Container (Laravel)
     $bm->start('benchmark3', 'laravel');
@@ -42,9 +42,13 @@ for ($i = 0; $i < 10000; $i++) {
     unset($illuminate);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 10000; $i++) {
+
     // Orno\Di
-    $bm->start('benchmark3', 'orno');
     $orno = new Orno\Di\Container;
+    $bm->start('benchmark3', 'orno');
     $orno->register('foo', function() {
         $bart = new Benchmark\Stubs\Bart;
         $bam = new Benchmark\Stubs\Bam($bart);
@@ -57,9 +61,13 @@ for ($i = 0; $i < 10000; $i++) {
     unset($orno);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 10000; $i++) {
+
     // League\Di
-    $bm->start('benchmark3', 'league');
     $league = new League\Di\Container;
+    $bm->start('benchmark3', 'league');
     $league->bind('foo', function() {
         $bart = new Benchmark\Stubs\Bart;
         $bam = new Benchmark\Stubs\Bam($bart);
@@ -72,9 +80,13 @@ for ($i = 0; $i < 10000; $i++) {
     unset($orno);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 10000; $i++) {
+
     // Pimple
-    $bm->start('benchmark3', 'pimple');
     $pimple = new Pimple;
+    $bm->start('benchmark3', 'pimple');
     $pimple['foo'] = function() {
         $bart = new Benchmark\Stubs\Bart;
         $bam = new Benchmark\Stubs\Bam($bart);
@@ -87,9 +99,13 @@ for ($i = 0; $i < 10000; $i++) {
     unset($pimple);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 10000; $i++) {
+
     // Aura.Di
-    $bm->start('benchmark3', 'aura');
     $aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
+    $bm->start('benchmark3', 'aura');
     $aura->set('foo', function() {
         $bart = new Benchmark\Stubs\Bart;
         $bam = new Benchmark\Stubs\Bam($bart);
@@ -102,9 +118,13 @@ for ($i = 0; $i < 10000; $i++) {
     unset($aura);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 10000; $i++) {
+
     // PHP-DI
-    $bm->start('benchmark3', 'php-di');
     $phpdi = new DI\Container();
+    $bm->start('benchmark3', 'php-di');
     $phpdi->useReflection(false);
     $phpdi->useAnnotations(false);
     $phpdi->set('foo', function() {
@@ -132,7 +152,7 @@ for ($i = 0; $i < 10000; $i++) {
     <meta name="viewport" content="width-device-width, initial-scale=1">
 </head>
 <body>
-    <div id="chart_div" style="width: 980px; height: 650px;"></div>
+    <div id="chart_div" style="width: 620px; height: 400px;"></div>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -141,7 +161,7 @@ for ($i = 0; $i < 10000; $i++) {
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Component', 'Time Taken'],
-            ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkTotal('benchmark3', 'laravel') ?>],
+            ['Illuminate\\Container', <?= $bm->getBenchmarkTotal('benchmark3', 'laravel') ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark3', 'orno') ?>],
             ['League\\Di', <?= $bm->getBenchmarkTotal('benchmark3', 'league') ?>],
             ['Pimple', <?= $bm->getBenchmarkTotal('benchmark3', 'pimple') ?>],
@@ -149,10 +169,7 @@ for ($i = 0; $i < 10000; $i++) {
             ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark3', 'php-di') ?>]
         ]);
 
-        var options = {
-            hAxis: {title: 'Component', titleTextStyle: {color: 'red'}},
-            vAxis: {title: 'Time Taken (Seconds)', titleTextStyle: {color: 'red'}}
-        };
+        var options = {};
 
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);

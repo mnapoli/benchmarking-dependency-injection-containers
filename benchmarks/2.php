@@ -19,17 +19,17 @@ unset($bart);
 
 $bm = new Benchmark\Timer;
 
+/*******************************************************************************
+ Benchmark 2: Auto resolution of object and dependencies.
+ (Register all objects with container)
+ Excluded: Pimple, Symfony
+********************************************************************************/
+
 for ($i = 0; $i < 1000; $i++) {
 
-    /*******************************************************************************
-     Benchmark 2: Auto resolution of object and dependencies.
-     (Register all objects with container)
-     Excluded: Pimple, Symfony
-    ********************************************************************************/
-
     // Illuminate\Container (Laravel)
-    $bm->start('benchmark2', 'laravel');
     $illuminate = new Illuminate\Container\Container;
+    $bm->start('benchmark2', 'laravel');
     $illuminate->bind('Foo', 'Benchmark\Stubs\Foo');
     $illuminate->bind('Benchmark\Stubs\Bar');
     $illuminate->bind('Benchmark\Stubs\Bam');
@@ -40,22 +40,30 @@ for ($i = 0; $i < 1000; $i++) {
     unset($illuminate);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 1000; $i++) {
+
     // Orno\Di
+    $orno = new Orno\Di\Container;
     $bm->start('benchmark2', 'orno');
-    $orno = (new Orno\Di\Container)->autoResolve(true);
-    $orno->register('Benchmark\Stubs\Foo');
-    $orno->register('Benchmark\Stubs\Bar');
-    $orno->register('Benchmark\Stubs\Bam');
-    $orno->register('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
-    $orno->register('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
+    $orno->register('Benchmark\Stubs\Foo', 'Benchmark\Stubs\Foo', false, true);
+    $orno->register('Benchmark\Stubs\Bar', 'Benchmark\Stubs\Bar', false, true);
+    $orno->register('Benchmark\Stubs\Bam', 'Benchmark\Stubs\Bam', false, true);
+    $orno->register('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz', false, true);
+    $orno->register('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart', false, true);
     $foo = $orno->resolve('Benchmark\Stubs\Foo');
     $bm->end('benchmark2', 'orno');
     unset($orno);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 1000; $i++) {
+
     // League\Di
-    $bm->start('benchmark2', 'league');
     $league = new League\Di\Container;
+    $bm->start('benchmark2', 'league');
     $league->bind('Benchmark\Stubs\Foo');
     $league->bind('Benchmark\Stubs\Bar');
     $league->bind('Benchmark\Stubs\Bam');
@@ -66,9 +74,13 @@ for ($i = 0; $i < 1000; $i++) {
     unset($orno);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 1000; $i++) {
+
     // Zend\Di
-    $bm->start('benchmark2', 'zend');
     $zend = new Zend\Di\Di;
+    $bm->start('benchmark2', 'zend');
     $zend->instanceManager()->addTypePreference('Benchmark\Stubs\Foo', 'Benchmark\Stubs\Foo');
     $zend->instanceManager()->addTypePreference('Benchmark\Stubs\Bar', 'Benchmark\Stubs\Bar');
     $zend->instanceManager()->addTypePreference('Benchmark\Stubs\Bam', 'Benchmark\Stubs\Bam');
@@ -79,9 +91,13 @@ for ($i = 0; $i < 1000; $i++) {
     unset($zend);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 1000; $i++) {
+
     // PHP-DI
-    $bm->start('benchmark2', 'php-di');
     $phpdi = new DI\Container();
+    $bm->start('benchmark2', 'php-di');
     $phpdi->useReflection(false);
     $phpdi->useAnnotations(false);
     $phpdi->addDefinitions(
@@ -115,7 +131,7 @@ for ($i = 0; $i < 1000; $i++) {
     <meta name="viewport" content="width-device-width, initial-scale=1">
 </head>
 <body>
-    <div id="chart_div" style="width: 980px; height: 650px;"></div>
+    <div id="chart_div" style="width: 620px; height: 400px;"></div>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -124,17 +140,14 @@ for ($i = 0; $i < 1000; $i++) {
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Component', 'Time Taken'],
-            ['Illuminate\\Container (Laravel)', <?= $bm->getBenchmarkTotal('benchmark2', 'laravel') ?>],
+            ['Illuminate\\Container', <?= $bm->getBenchmarkTotal('benchmark2', 'laravel') ?>],
             ['Orno\\Di', <?= $bm->getBenchmarkTotal('benchmark2', 'orno') ?>],
             ['League\\Di', <?= $bm->getBenchmarkTotal('benchmark2', 'league') ?>],
             ['Zend\\Di', <?= $bm->getBenchmarkTotal('benchmark2', 'zend') ?>],
             ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark2', 'php-di') ?>]
         ]);
 
-        var options = {
-            hAxis: {title: 'Component', titleTextStyle: {color: 'red'}},
-            vAxis: {title: 'Time Taken (Seconds)', titleTextStyle: {color: 'red'}}
-        };
+        var options = {};
 
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);

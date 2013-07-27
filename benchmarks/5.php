@@ -19,12 +19,12 @@ unset($bart);
 
 $bm = new Benchmark\Timer;
 
-for ($i = 0; $i < 1000; $i++) {
+/*******************************************************************************
+ Benchmark 5: Setter injection with defined setter methods.
+ Excluded: Laravel, Pimple, Zend
+********************************************************************************/
 
-    /*******************************************************************************
-     Benchmark 5: Setter injection with defined setter methods.
-     Excluded: Laravel, Pimple, Zend
-    ********************************************************************************/
+for ($i = 0; $i < 1000; $i++) {
 
     // Symfony\DependencyInjection
     $bm->start('benchmark5', 'symfony');
@@ -39,9 +39,13 @@ for ($i = 0; $i < 1000; $i++) {
     unset($symfony);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 1000; $i++) {
+
     // Orno\Di
-    $bm->start('benchmark5', 'orno');
     $orno = new Orno\Di\Container;
+    $bm->start('benchmark5', 'orno');
     $orno->register('Benchmark\Stubs\Bart');
     $orno->register('Benchmark\Stubs\Bam')->withMethodCall('setBart', ['Benchmark\Stubs\Bart']);
     $orno->register('Benchmark\Stubs\Baz')->withMethodCall('setBam', ['Benchmark\Stubs\Bam']);
@@ -52,9 +56,13 @@ for ($i = 0; $i < 1000; $i++) {
     unset($orno);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 1000; $i++) {
+
     // League\Di
-    $bm->start('benchmark5', 'league');
     $league = new League\Di\Container;
+    $bm->start('benchmark5', 'league');
     $league->bind('Benchmark\Stubs\Bart');
     $league->bind('Benchmark\Stubs\Bam')->withMethod('setBart', ['Benchmark\Stubs\Bart']);
     $league->bind('Benchmark\Stubs\Baz')->withMethod('setBam', ['Benchmark\Stubs\Bam']);
@@ -65,9 +73,13 @@ for ($i = 0; $i < 1000; $i++) {
     unset($orno);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 1000; $i++) {
+
     // Aura.Di
-    $bm->start('benchmark5', 'aura');
     $aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
+    $bm->start('benchmark5', 'aura');
     $aura->setter['Benchmark\Stubs\Bam']['setBart'] = $aura->lazyNew('Benchmark\Stubs\Bart');
     $aura->setter['Benchmark\Stubs\Baz']['setBam'] = $aura->lazyNew('Benchmark\Stubs\Bam');
     $aura->setter['Benchmark\Stubs\Bar']['setBaz'] = $aura->lazyNew('Benchmark\Stubs\Baz');
@@ -77,9 +89,13 @@ for ($i = 0; $i < 1000; $i++) {
     unset($aura);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 1000; $i++) {
+
     // PHP-DI
-    $bm->start('benchmark5', 'php-di');
     $phpdi = new DI\Container();
+    $bm->start('benchmark5', 'php-di');
     $phpdi->useReflection(false);
     $phpdi->useAnnotations(false);
     $phpdi->addDefinitions(
@@ -127,7 +143,7 @@ for ($i = 0; $i < 1000; $i++) {
     <meta name="viewport" content="width-device-width, initial-scale=1">
 </head>
 <body>
-    <div id="chart_div" style="width: 980px; height: 650px;"></div>
+    <div id="chart_div" style="width: 620px; height: 400px;"></div>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -143,10 +159,7 @@ for ($i = 0; $i < 1000; $i++) {
             ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark5', 'php-di') ?>]
         ]);
 
-        var options = {
-            hAxis: {title: 'Component', titleTextStyle: {color: 'red'}},
-            vAxis: {title: 'Time Taken (Seconds)', titleTextStyle: {color: 'red'}}
-        };
+        var options = {};
 
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);

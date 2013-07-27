@@ -3,9 +3,9 @@
     "license": "MIT",
     "require": {
         "php": ">=5.4",
-        "orno/di": "1.1.0",
+        "orno/di": "dev-master",
         "pimple/pimple": "dev-trigger",
-        "illuminate/container": "4.0.*@dev",
+        "illuminate/container": "4.0.*",
         "zendframework/zend-di": "dev-master",
         "symfony/dependency-injection": "2.2.*@dev",
         "aura/di": "dev-master",

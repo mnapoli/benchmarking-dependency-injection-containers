@@ -19,16 +19,16 @@ unset($bart);
 
 $bm = new Benchmark\Timer;
 
+/*******************************************************************************
+ Benchmark 4: Constructor injection with defined arguments.
+ Excluded: Laravel, Pimple, Zend
+********************************************************************************/
+
 for ($i = 0; $i < 100; $i++) {
 
-    /*******************************************************************************
-     Benchmark 4: Constructor injection with defined arguments.
-     Excluded: Laravel, Pimple, Zend
-    ********************************************************************************/
-
     // Orno\Di
-    $bm->start('benchmark4', 'orno');
     $orno = new Orno\Di\Container;
+    $bm->start('benchmark4', 'orno');
     $orno->register('Benchmark\Stubs\Bart');
     $orno->register('Benchmark\Stubs\Bam')->withArgument('Benchmark\Stubs\Bart');
     $orno->register('Benchmark\Stubs\Baz')->withArgument('Benchmark\Stubs\Bam');
@@ -39,9 +39,13 @@ for ($i = 0; $i < 100; $i++) {
     unset($orno);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 100; $i++) {
+
     // League\Di
-    $bm->start('benchmark4', 'league');
     $league = new League\Di\Container;
+    $bm->start('benchmark4', 'league');
     $league->bind('Benchmark\Stubs\Bart');
     $league->bind('Benchmark\Stubs\Bam')->addArg('Benchmark\Stubs\Bart');
     $league->bind('Benchmark\Stubs\Baz')->addArg('Benchmark\Stubs\Bam');
@@ -52,9 +56,13 @@ for ($i = 0; $i < 100; $i++) {
     unset($orno);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 100; $i++) {
+
     // Symfony\DependencyInjection
-    $bm->start('benchmark4', 'symfony');
     $symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
+    $bm->start('benchmark4', 'symfony');
     $symfony->register('foo', 'Benchmark\Stubs\Foo')->addArgument(new Symfony\Component\DependencyInjection\Reference('bar'));
     $symfony->register('bar', 'Benchmark\Stubs\Bar')->addArgument(new Symfony\Component\DependencyInjection\Reference('baz'));
     $symfony->register('baz', 'Benchmark\Stubs\Baz')->addArgument(new Symfony\Component\DependencyInjection\Reference('bam'));
@@ -65,9 +73,13 @@ for ($i = 0; $i < 100; $i++) {
     unset($symfony);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 100; $i++) {
+
     // Zend\Di
-    $bm->start('benchmark4', 'zend');
     $zend = new Zend\Di\Di;
+    $bm->start('benchmark4', 'zend');
     $zend->instanceManager()->setInjections('Benchmark\Stubs\Foo', ['Benchmark\Stubs\Bar']);
     $zend->instanceManager()->setInjections('Benchmark\Stubs\Bar', ['Benchmark\Stubs\Baz']);
     $zend->instanceManager()->setInjections('Benchmark\Stubs\Baz', ['Benchmark\Stubs\Bam']);
@@ -77,9 +89,13 @@ for ($i = 0; $i < 100; $i++) {
     unset($zend);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 100; $i++) {
+
     // Aura.Di
-    $bm->start('benchmark4', 'aura');
     $aura = new Aura\Di\Container(new Aura\Di\Forge(new Aura\Di\Config));
+    $bm->start('benchmark4', 'aura');
     $aura->params['Benchmark\Stubs\Bam'] = ['bart' => $aura->lazyNew('Benchmark\Stubs\Bart')];
     $aura->params['Benchmark\Stubs\Baz'] = ['bam' => $aura->lazyNew('Benchmark\Stubs\Bam')];
     $aura->params['Benchmark\Stubs\Bar'] = ['baz' => $aura->lazyNew('Benchmark\Stubs\Baz')];
@@ -89,9 +105,13 @@ for ($i = 0; $i < 100; $i++) {
     unset($aura);
     unset($foo);
 
+}
+
+for ($i = 0; $i < 100; $i++) {
+
     // PHP-DI
-    $bm->start('benchmark4', 'php-di');
     $phpdi = new DI\Container();
+    $bm->start('benchmark4', 'php-di');
     $phpdi->useReflection(false);
     $phpdi->useAnnotations(false);
     $phpdi->addDefinitions(
@@ -127,7 +147,7 @@ for ($i = 0; $i < 100; $i++) {
     <meta name="viewport" content="width-device-width, initial-scale=1">
 </head>
 <body>
-    <div id="chart_div" style="width: 980px; height: 650px;"></div>
+    <div id="chart_div" style="width: 620px; height: 400px;"></div>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -144,10 +164,7 @@ for ($i = 0; $i < 100; $i++) {
             ['PHP-DI', <?= $bm->getBenchmarkTotal('benchmark4', 'php-di') ?>]
         ]);
 
-        var options = {
-            hAxis: {title: 'Component', titleTextStyle: {color: 'red'}},
-            vAxis: {title: 'Time Taken (Seconds)', titleTextStyle: {color: 'red'}}
-        };
+        var options = {};
 
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);
