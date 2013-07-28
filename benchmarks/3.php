@@ -123,10 +123,11 @@ for ($i = 0; $i < 10000; $i++) {
 for ($i = 0; $i < 10000; $i++) {
 
     // PHP-DI
-    $phpdi = new DI\Container();
+    $phpdiBuilder = new DI\ContainerBuilder();
+    $phpdiBuilder->useReflection(false);
+    $phpdiBuilder->useAnnotations(false);
+    $phpdi = $phpdiBuilder->build();
     $bm->start('benchmark3', 'php-di');
-    $phpdi->useReflection(false);
-    $phpdi->useAnnotations(false);
     $phpdi->set('foo', function() {
         $bart = new Benchmark\Stubs\Bart;
         $bam = new Benchmark\Stubs\Bam($bart);
@@ -137,6 +138,7 @@ for ($i = 0; $i < 10000; $i++) {
     $foo = $phpdi->get('foo');
     $bm->end('benchmark3', 'php-di');
     unset($phpdi);
+    unset($phpdiBuilder);
     unset($foo);
 
 }

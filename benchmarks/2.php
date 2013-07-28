@@ -96,26 +96,20 @@ for ($i = 0; $i < 1000; $i++) {
 for ($i = 0; $i < 1000; $i++) {
 
     // PHP-DI
-    $phpdi = new DI\Container();
+    $phpdiBuilder = new DI\ContainerBuilder();
+    $phpdiBuilder->useReflection(false);
+    $phpdiBuilder->useAnnotations(false);
+    $phpdi = $phpdiBuilder->build();
     $bm->start('benchmark2', 'php-di');
-    $phpdi->useReflection(false);
-    $phpdi->useAnnotations(false);
-    $phpdi->addDefinitions(
-        array(
-             'Benchmark\Stubs\Foo'  => array(),
-             'Benchmark\Stubs\Bar'  => array(),
-             'Benchmark\Stubs\Bam'  => array(),
-             'Benchmark\Stubs\BazInterface'  => array(
-                 'class' => 'Benchmark\Stubs\Baz'
-             ),
-             'Benchmark\Stubs\BartInterface'  => array(
-                 'class' => 'Benchmark\Stubs\Bart'
-             ),
-        )
-    );
+    $phpdi->set('Benchmark\Stubs\Foo');
+    $phpdi->set('Benchmark\Stubs\Bar');
+    $phpdi->set('Benchmark\Stubs\Bam');
+    $phpdi->set('Benchmark\Stubs\BazInterface')->bindTo('Benchmark\Stubs\Baz');
+    $phpdi->set('Benchmark\Stubs\BartInterface')->bindTo('Benchmark\Stubs\Bart');
     $foo = $phpdi->get('Benchmark\Stubs\Foo');
     $bm->end('benchmark2', 'php-di');
     unset($phpdi);
+    unset($phpdiBuilder);
     unset($foo);
 
 }

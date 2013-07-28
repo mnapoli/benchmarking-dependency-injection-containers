@@ -110,29 +110,20 @@ for ($i = 0; $i < 100; $i++) {
 for ($i = 0; $i < 100; $i++) {
 
     // PHP-DI
-    $phpdi = new DI\Container();
+    $phpdiBuilder = new DI\ContainerBuilder();
+    $phpdiBuilder->useReflection(false);
+    $phpdiBuilder->useAnnotations(false);
+    $phpdi = $phpdiBuilder->build();
     $bm->start('benchmark4', 'php-di');
-    $phpdi->useReflection(false);
-    $phpdi->useAnnotations(false);
-    $phpdi->addDefinitions(
-        array(
-             'Benchmark\Stubs\Bam'  => array(
-                 'constructor' => array('Benchmark\Stubs\Bart'),
-             ),
-             'Benchmark\Stubs\Baz'  => array(
-                 'constructor' => array('Benchmark\Stubs\Bam'),
-             ),
-             'Benchmark\Stubs\Bar'  => array(
-                 'constructor' => array('Benchmark\Stubs\Baz'),
-             ),
-             'Benchmark\Stubs\Foo'  => array(
-                 'constructor' => array('Benchmark\Stubs\Bar'),
-             ),
-        )
-    );
+    $phpdi->set('Benchmark\Stubs\Bart');
+    $phpdi->set('Benchmark\Stubs\Bam')->withConstructor(array('Benchmark\Stubs\Bart'));
+    $phpdi->set('Benchmark\Stubs\Baz')->withConstructor(array('Benchmark\Stubs\Bam'));
+    $phpdi->set('Benchmark\Stubs\Bar')->withConstructor(array('Benchmark\Stubs\Baz'));
+    $phpdi->set('Benchmark\Stubs\Foo')->withConstructor(array('Benchmark\Stubs\Bar'));
     $foo = $phpdi->get('Benchmark\Stubs\Foo');
     $bm->end('benchmark4', 'php-di');
     unset($phpdi);
+    unset($phpdiBuilder);
     unset($foo);
 
 }

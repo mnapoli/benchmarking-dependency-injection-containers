@@ -94,40 +94,20 @@ for ($i = 0; $i < 1000; $i++) {
 for ($i = 0; $i < 1000; $i++) {
 
     // PHP-DI
-    $phpdi = new DI\Container();
+    $phpdiBuilder = new DI\ContainerBuilder();
+    $phpdiBuilder->useReflection(false);
+    $phpdiBuilder->useAnnotations(false);
+    $phpdi = $phpdiBuilder->build();
     $bm->start('benchmark5', 'php-di');
-    $phpdi->useReflection(false);
-    $phpdi->useAnnotations(false);
-    $phpdi->addDefinitions(
-        array(
-             'Benchmark\Stubs\Bart'  => array(
-                 'class' => 'Benchmark\Stubs\Bart'
-             ),
-             'Benchmark\Stubs\Bam'  => array(
-                 'methods' => array(
-                     'setBart' => 'Benchmark\Stubs\Bart',
-                 ),
-             ),
-             'Benchmark\Stubs\Baz'  => array(
-                 'methods' => array(
-                     'setBam' => 'Benchmark\Stubs\Bam',
-                 ),
-             ),
-             'Benchmark\Stubs\Bar'  => array(
-                 'methods' => array(
-                     'setBaz' => 'Benchmark\Stubs\Baz',
-                 ),
-             ),
-             'Benchmark\Stubs\Foo'  => array(
-                 'methods' => array(
-                     'setBar' => 'Benchmark\Stubs\Bar',
-                 ),
-             ),
-        )
-    );
+    $phpdi->set('Benchmark\Stubs\Bart');
+    $phpdi->set('Benchmark\Stubs\Bam')->withMethod('setBart', array('Benchmark\Stubs\Bart'));
+    $phpdi->set('Benchmark\Stubs\Baz')->withMethod('setBam', array('Benchmark\Stubs\Bam'));
+    $phpdi->set('Benchmark\Stubs\Bar')->withMethod('setBaz', array('Benchmark\Stubs\Baz'));
+    $phpdi->set('Benchmark\Stubs\Foo')->withMethod('setBar', array('Benchmark\Stubs\Bar'));
     $foo = $phpdi->get('Benchmark\Stubs\Foo');
     $bm->end('benchmark5', 'php-di');
     unset($phpdi);
+    unset($phpdiBuilder);
     unset($foo);
 
 }
